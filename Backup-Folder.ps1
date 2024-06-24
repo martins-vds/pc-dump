@@ -24,4 +24,4 @@ $BackupFolder = Get-Item -Path $Path
 Write-Host "Zipping backup folder"
 $zipFile = "$($BackupFolder.Name).zip"
 
-Compress-Archive -Path $Path -DestinationPath $(Join-Path -Path $DestinationPath -ChildPath $zipFile) -Force
+Compress-Archive -Path $(Join-Path -Path $Path -ChildPath "*") -DestinationPath $(Join-Path -Path $DestinationPath -ChildPath $zipFile) -Force
