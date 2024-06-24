@@ -1,14 +1,15 @@
-# Dump system and user environment variables to a json file.
-# Usage: .\Dump-Env.ps1
-# Sample dump:
-# {
-#     "system": [
-#         { "name": "ALLUSERSPROFILE", "value": "C:\\ProgramData"}
-#     ],
-#     "User": [
-#         { "name": "ALLUSERSPROFILE", "value": "C:\\ProgramData"}
-#     ]
-# }
+[CmdletBinding()]
+param (
+    [Parameter(Mandatory=$true)]
+    [string]
+    $Path
+)
+
+$ErrorActionPreference = 'Stop'
+
+if (-not (Test-Path $Path -PathType Container)) {
+    New-Item -Path $Path -ItemType Directory | Out-Null
+}
 
 $systemVariables = [System.Environment]::GetEnvironmentVariables([System.EnvironmentVariableTarget]::Machine)
 $userVariables = [System.Environment]::GetEnvironmentVariables([System.EnvironmentVariableTarget]::User)
@@ -29,4 +30,4 @@ $env = @{
     "user" = $user 
 }
 
-$env | ConvertTo-Json | Out-File -FilePath env.json
+$env | ConvertTo-Json | Out-File -FilePath $(Join-Path -Path $Path -ChildPath "env.json")
